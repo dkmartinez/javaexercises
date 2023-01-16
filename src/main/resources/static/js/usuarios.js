@@ -19,11 +19,14 @@ async function cargarUsuarios(){
   console.log(usuarios);
   
   let listadoHTML = '';
+  
+  
   for(let usuario of usuarios){
+	  let usuarioTelefono = usuario.phoneNumber == null ? '-' : usuario.phoneNumber;
 	  
 	  let botonEliminar = '<a href="#" onclick= "eliminarUsuario(' + usuario.id + ')" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>';
 	  
-	  let usuarioHTML = '<tr><td>'+ usuario.id +'</td><td>'+ usuario.name + ' ' + usuario.lastName + '</td><td>'+ usuario.email +'</td><td>'+ usuario.phoneNumber +'</td><td>'+ botonEliminar + '</td></tr>';
+	  let usuarioHTML = '<tr><td>'+ usuario.id +'</td><td>'+ usuario.name + ' ' + usuario.lastName + '</td><td>'+ usuario.email +'</td><td>'+ usuarioTelefono +'</td><td>'+ botonEliminar + '</td></tr>';
 	  
 	  listadoHTML += usuarioHTML;
   }
