@@ -33,6 +33,20 @@ async function cargarUsuarios(){
 	
 }
 
-function eliminarUsuario(id){
-	  alert(id);
+async function eliminarUsuario(id){
+	
+	if(!confirm ("¿Desea eliminar este usuario?")){
+		return;
+	}
+	
+	const request = await fetch('user/' + id, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+   
+  });
+  
+  location.reload();
   }
