@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cursojava.curso.dao.UsuarioDao;
 import com.cursojava.curso.models.Usuario;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+
 @RestController
 public class UsuarioController {
 	
@@ -28,9 +31,17 @@ public class UsuarioController {
 	
 	@RequestMapping(value = "users", method = RequestMethod.POST)
 	public void registrarUsuario(@RequestBody Usuario usuario){
-		 usuarioDao.registrar(usuario);
+		//encriptar contraseña 
+		Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+		String hasheo = argon2.hash(1, 1024, 1, usuario.getPassword());
+		
+		usuario.setPassword(hasheo);
+		
+			usuarioDao.registrar(usuario);
 
 	}
+	
+	
 	
 	@RequestMapping(value = "user/{id}", method = RequestMethod.GET)
 	public Usuario getUser(@PathVariable Long id){

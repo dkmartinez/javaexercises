@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cursojava.curso.models.Usuario;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+
 
 @Repository
 @Transactional
@@ -44,13 +47,21 @@ public class UsuarioDaoImp implements UsuarioDao{
 
 	@Override
 	public boolean verificarEmailPassword(Usuario usuario) {
-		String query = "FROM Usuario WHERE email = :email AND password = :password ";
+		String query = "FROM Usuario WHERE email = :email";
 		List<Usuario> lista=  entityManager.createQuery(query)
 		 .setParameter("email", usuario.getEmail())
-		 .setParameter("password", usuario.getPassword())
 		 .getResultList();
 		
-	return !lista.isEmpty();
+		if(lista.isEmpty()) {
+			return false;
+		}
+		
+		String passwordHashed = lista.get(0).getPassword();
+		
+		Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+		boolean comparandoPassword = argon2.verify(passwordHashed, usuario.getPassword());
+		
+	return comparandoPassword;
 	}
 	
 
